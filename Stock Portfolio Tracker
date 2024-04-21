@@ -1,0 +1,43 @@
+import yfinance as yf
+
+def get_stock_data(ticker):
+    try:
+        stock = yf.Ticker(ticker)
+        data = stock.history(period="1d")
+        return data
+    except:
+        print("Error fetching data for", ticker)
+        return None
+
+def main():
+    portfolio = {}
+    while True:
+        print("\n1. Add stock to portfolio")
+        print("2. View portfolio")
+        print("3. Quit")
+        choice = input("\nEnter your choice: ")
+
+        if choice == "1":
+            ticker = input("Enter stock ticker symbol: ").upper()
+            if ticker not in portfolio:
+                data = get_stock_data(ticker)
+                if data is not None:
+                    portfolio[ticker] = data
+                    print(ticker, "added to portfolio.")
+            else:
+                print("Stock already in portfolio.")
+        elif choice == "2":
+            if len(portfolio) > 0:
+                print("\nPortfolio:")
+                for ticker, data in portfolio.items():
+                    print("\n" + ticker + ":\n", data)
+            else:
+                print("\nPortfolio is empty.")
+        elif choice == "3":
+            print("Exiting...")
+            break
+        else:
+            print("Invalid choice. Please enter a valid option.")
+
+if __name__ == "__main__":
+    main()
